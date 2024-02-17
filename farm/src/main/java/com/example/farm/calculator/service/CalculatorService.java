@@ -2,14 +2,20 @@ package com.example.farm.calculator.service;
 
 import com.example.farm.calculator.dto.CalculateRequestDto;
 import com.example.farm.calculator.dto.CalculateResponseDto;
+import com.example.farm.calculator.entity.CalculateHistory;
+import com.example.farm.calculator.repository.CalculateHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CalculatorService {
 
+    private final CalculateHistoryRepository calculateHistoryRepository;
 
+    @Transactional
     public CalculateResponseDto calculate(CalculateRequestDto requestDto) {
 
         CalculateResponseDto calculateResponseDto = new CalculateResponseDto();
@@ -22,7 +28,24 @@ public class CalculatorService {
         calculateResponseDto.setEarningPerMachine((int)earningPerMachine);
         calculateResponseDto.setTotalEarning((int)earningPerMachine * requestDto.getTotalMachine());
 
+        saveHistory(requestDto, calculateResponseDto.getEarningPerMachine(), calculateResponseDto.getTotalEarning());
+
         return calculateResponseDto;
+    }
+
+    private void saveHistory(CalculateRequestDto requestDto, int earningPerMachine, int totalEarning) {
+        CalculateHistory calculateHistory = CalculateHistory.builder()
+                .mineralPurchasePrice(requestDto.getMineralPurchasePrice())
+                .timeMaterialPurchasePrice(requestDto.getTimeMaterialPurchasePrice())
+                .laborCost(requestDto.getLaborCost())
+                .productSellingPrice(requestDto.getProductSellingPrice())
+                .increaseByLabor(requestDto.getIncreaseByLabor())
+                .totalMachine(requestDto.getTotalMachine())
+                .earningPerMachine(earningPerMachine)
+                .totalEarning(totalEarning)
+                .build();
+
+        calculateHistoryRepository.save(calculateHistory);
     }
 
 }
