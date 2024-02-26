@@ -5,6 +5,7 @@ import com.example.farm.config.jwt.JwtAuthorizationFilter;
 import com.example.farm.config.jwt.JwtTokenUtils;
 import com.example.farm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -47,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST ,"/sign").permitAll()
                         .requestMatchers("/sign", "/sign/*").permitAll()
                         .requestMatchers("/user/kakao/callback").permitAll()
+                        .requestMatchers("/time/calc.html").permitAll()
                         .requestMatchers("/time/calc").permitAll()
                         .anyRequest().authenticated()
                 )

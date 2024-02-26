@@ -17,6 +17,7 @@ public class CalculatorService {
 
     @Transactional
     public CalculateResponseDto calculate(CalculateRequestDto requestDto) {
+        requestDto.checkNumericRangeAndSetAvailable();
 
         CalculateResponseDto calculateResponseDto = new CalculateResponseDto();
         double earningPerMachine = (requestDto.getProductSellingPrice() / 396.0) * (5 + requestDto.getIncreaseByLabor());   // 타임기 1대 판매가

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    </head>
+    <body style="background-color: beige;">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+        <div class="mainPage" style="width: 500px; margin: auto; background-color:  lightgreen; padding: 5px; margin-top: 50px; border-radius: 5px;">
+            <div style="margin-bottom: 20px;">
+                시균, 고미, 타임 거래 가격은 대량(4덩=396개)을 기준으로 합니다.
+                <br>
+            </div>
+
+            <div style="margin-top: 5px;">
+                <label for="timeMaterialPurchasePrice" class="form-label" style="margin-bottom: 0.1rem;">시균 매입가</label>
+                <input type="email" class="form-control" id="timeMaterialPurchasePrice" placeholder="기본값 : 3000" style="">
+            </div>
+            <div style="margin-top: 5px;">
+                <label for="mineralPurchasePrice" class="form-label" style="margin-bottom: 0.1rem;">고미 매입가</label>
+                <input type="email" class="form-control" id="mineralPurchasePrice" placeholder="기본값 : 3000" style="">
+            </div>
+            <div style="margin-top: 5px;">
+                <label for="laborCost" class="form-label" style="margin-bottom: 0.1rem;">품 알바비</label>
+                <input type="email" class="form-control" id="laborCost" placeholder="기본값 : 30" style="">
+            </div>
+            <div style="margin-top: 5px;">
+                <label for="productSellingPrice" class="form-label" style="margin-bottom: 0.1rem;">타임 판매가</label>
+                <input type="email" class="form-control" id="productSellingPrice" placeholder="기본값 : 8000" style="">
+            </div>
+            <div style="margin-top: 5px;">
+                <label for="increaseByLabor" class="form-label" style="margin-bottom: 0.1rem;">손 개수 (기술 수치에 따른 품 증가 개수) (기본값 : 5손)</label>
+                <select class="form-select" id="increaseByLabor" aria-label="Default select example">
+                    <option value="1">1손 (기술 1~100)</option>
+                    <option value="2">2손 (기술 101~200)</option>
+                    <option value="3">3손 (기술 201~300)</option>
+                    <option value="4">4손 (기술 301~400)</option>
+                    <option value="5" selected>5손 (기술 401~500)</option>
+                    <option value="6">6손 (기술 501~600)</option>
+                    <option value="7">7손 (기술 601~700)</option>
+                    <option value="8">8손 (기술 701~800)</option>
+                </select>
+            </div>
+            <div style="margin-top: 5px;">
+                <label for="totalMachine" class="form-label" style="margin-bottom: 0.1rem;">타입기 가동수</label>
+                <input type="email" class="form-control" id="totalMachine" placeholder="기본값 : 10" style="">
+            </div>
+            <div style="margin-top: 15px;">
+                <button type="button" class="btn btn-success" onclick="requestCalculate()">계산하기</button>
+            </div>
+
+            <hr>
+            <div class="requestCalculateResult" id="requestCalculateResult" style="margin-left: 10px;">
+                <h4>계산 결과</h4>
+            </div>
+            <hr>
+        </div>
+
+    </body>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <script>
+        console.log("script load start");
+
+
+        // ========================== debug ===========================
+        console.log("timeMaterialPurchasePrice = [" + timeMaterialPurchasePrice + "]");
+        console.log("mineralPurchasePrice = [" + mineralPurchasePrice + "]");
+        console.log("laborCost = [" + laborCost + "]");
+        console.log("productSellingPrice = [" + productSellingPrice + "]");
+        console.log("increaseByLabor = [" + increaseByLabor + "]");
+        console.log("totalMachine = [" + totalMachine + "]");
+        // ============================================================
+
+        // ============== 초기값(기본값) 서버 조회 로직 추가 ===============
+        // let data = {
+        //     "url": "http://localhost:8080/time/calc",
+        //     "method": "POST",
+        //     "timeout": 0,
+        //     "headers": {
+        //         "Content-Type": "application/json"
+        //     },
+        //     "data": JSON.stringify({
+        //         "timeMaterialPurchasePrice": timeMaterialPurchasePrice,
+        //         "mineralPurchasePrice": mineralPurchasePrice,
+        //         "laborCost": laborCost,
+        //         "productSellingPrice": productSellingPrice,
+        //         "increaseByLabor": increaseByLabor,
+        //         "totalMachine": totalMachine
+        //     }),
+        // };
+        // $.ajax(data).done(function (response) {
+        //     console.log(response);
+        // });
+        // ===========================================================
+        
+        function requestCalculate() {
+            console.log("requestCalculate() called");
+
+            var timeMaterialPurchasePrice = document.getElementById('timeMaterialPurchasePrice').value;
+            var mineralPurchasePrice = document.getElementById('mineralPurchasePrice').value;
+            var laborCost = document.getElementById('laborCost').value;
+            var productSellingPrice = document.getElementById('productSellingPrice').value;
+            var increaseByLabor = document.getElementById('increaseByLabor').value;
+            var totalMachine = document.getElementById('totalMachine').value;
+
+            if (timeMaterialPurchasePrice == "") {
+                timeMaterialPurchasePrice = 3000;
+            }
+            if (mineralPurchasePrice == "") {
+                mineralPurchasePrice = 3000;
+            }
+            if (laborCost == "") {
+                laborCost = 30;
+            }
+            if (productSellingPrice  == "") {
+                productSellingPrice  = 8000;
+            }
+            if (totalMachine == "") {
+                totalMachine = 10;
+            }
+
+            let request = {
+                "url": "http://localhost:8080/time/calc",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "data": JSON.stringify({
+                    "timeMaterialPurchasePrice": timeMaterialPurchasePrice,
+                    "mineralPurchasePrice": mineralPurchasePrice,
+                    "laborCost": laborCost,
+                    "productSellingPrice": productSellingPrice,
+                    "increaseByLabor": increaseByLabor,
+                    "totalMachine": totalMachine
+                }),
+            };
+
+            $.ajax(request).done(function (response) {
+                console.log(response);
+                let totalEarning = Math.floor(response.data.totalEarning / 10000) + "만 골드(" + response.data.totalEarning + " 골드)";
+                let earningPerMachine = Math.floor(response.data.earningPerMachine / 10000) + "만 골드(" + response.data.earningPerMachine + " 골드)";
+
+                let requestCalculateResult = document.getElementById("requestCalculateResult");
+                let newDiv1 = document.createElement("div");
+                newDiv1.innerHTML = "총 순이익 : " + totalEarning + "\n";
+                let newDiv2 = document.createElement("div");
+                newDiv2.innerHTML = "타임기 1대 순이익 : " + earningPerMachine + "\n";
+
+                let details = document.createElement("details");
+                let summary = document.createElement("summary");
+                summary.innerText = "자세히 보기";
+                summary.setAttribute("style", "color:black;")
+                details.setAttribute("style", "color:gray; margin-left: 10px;")
+                details.innerText = "시균 매입가 : " + timeMaterialPurchasePrice + "\n" +
+                    "고미 매입가 : " + mineralPurchasePrice + "\n" +
+                    "품 알바비 : " + laborCost + "\n" +
+                    "타임 판매가 : " + productSellingPrice + "\n" +
+                    "손 개수 : " + increaseByLabor + "\n" +
+                    "타임기 가동수 : " + totalMachine + "\n";
+                details.append(summary);
+
+                requestCalculateResult.appendChild(newDiv1);
+                requestCalculateResult.appendChild(newDiv2);
+                requestCalculateResult.appendChild(details);
+                requestCalculateResult.appendChild(document.createElement("br"));
+
+            });
+        }
+    </script>
+</html>
