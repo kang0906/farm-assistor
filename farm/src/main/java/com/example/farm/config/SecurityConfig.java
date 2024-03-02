@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/time/calc").permitAll()
                         .requestMatchers("/nav.html").permitAll()
                         .requestMatchers("/contact.html").permitAll()
+                        .requestMatchers("/contact").permitAll()
                         .requestMatchers("/trade/gear.html").permitAll()
                         .requestMatchers("/trade/item.html").permitAll()
                         .anyRequest().authenticated()
