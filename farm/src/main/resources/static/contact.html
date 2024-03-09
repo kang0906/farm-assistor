@@ -19,9 +19,44 @@
     })
 </script>
 <div id="header"></div>
-문의하기
+
+<div class="mainPage" style="width: 500px; margin: auto; background-color:  lightgreen; padding: 5px; margin-top: 50px; border-radius: 5px;">
+    <div class="mb-3">
+        <label for="nameInput" class="form-label">팜닉(닉네임 또는 email 등 연락처)</label>
+        <input type="email" class="form-control" id="nameInput" placeholder="닉네임 또는 이메일을 입력해주세요.">
+        <label for="contactTextarea" class="form-label">문의 사항</label>
+        <textarea class="form-control" id="contactTextarea" rows="10" placeholder="문의 내용을 입력해주세요."></textarea>
+    </div>
+    <div style="margin-top: 15px;">
+        <button type="button" class="btn btn-success" onclick="send()">전송하기</button>
+    </div>
+
+</div>
+
 </body>
 <script>
+    function send() {
+        var nameInput = document.getElementById('nameInput').value;
+        var contactTextarea = document.getElementById('contactTextarea').value;
 
+        let request = {
+            "url": "http://localhost:8080/contact",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+                "userName": nameInput,
+                "content": contactTextarea
+            }),
+        };
+
+        $.ajax(request).done(function (response) {
+            alert("문의사항 전송 완료")
+        });
+
+        location.href = '/time/calc.html';
+    }
 </script>
 </html>
